@@ -1,13 +1,15 @@
 
 const respond = (callback) => (statusCode, body, opts) => {
+  opts = opts || {};
   if (typeof body === 'object') { body = JSON.stringify(body); }
   return callback(null, Object.assign({}, { statusCode, body }, opts));
 };
 
-module.exports = async (opts, fn) => (event, context, callback) => {
+module.exports = (opts, fn) => async (event, context, callback) => {
   try {
-    return fn(event, context, callback, respond(callback))
+    return await fn(event, context, callback, respond(callback))
   } catch (e) {
-    return respond(callback)(500, opts.suppressErrors ? null : { error: e.toString() });
+    response = opts.suppressErrors ? null : { error: e.toString() }
+    return respond(callback)(500, response);
   }
 }
