@@ -1,3 +1,4 @@
+const getProp = require('@f/get-prop');
 
 const respond = (callback) => (statusCode, body, opts) => {
   opts = opts || {};
@@ -7,7 +8,8 @@ const respond = (callback) => (statusCode, body, opts) => {
 
 module.exports = (fn, opts) => async (event, context, callback) => {
   try {
-    return await fn({ event, context, callback, respond: respond(callback) })
+    const verbose = !!(getProp('queryStringParameters.verbose', event));
+    return await fn({ verbose, event, context, callback, respond: respond(callback) })
   } catch (e) {
     response = (opts && opts.surfaceErrors) ? { error: e.toString() } : null;
     return respond(callback)(500, response);

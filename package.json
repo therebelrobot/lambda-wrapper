@@ -1,6 +1,6 @@
 {
   "name": "lambda-api-wrapper",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A lightweight api-gateway wrapper for lambda",
   "main": "wrapper.js",
   "scripts": {
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/therebelrobot/lambda-wrapper/issues"
   },
-  "homepage": "https://github.com/therebelrobot/lambda-wrapper#readme"
+  "homepage": "https://github.com/therebelrobot/lambda-wrapper#readme",
+  "dependencies": {
+    "@f/get-prop": "^1.1.1"
+  }
 }
