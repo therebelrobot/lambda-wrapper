@@ -7,7 +7,7 @@ const respond = (callback) => (statusCode, body, opts) => {
 
 module.exports = (opts, fn) => async (event, context, callback) => {
   try {
-    return await fn(event, context, callback, respond(callback))
+    return await fn({ event, context, callback, respond: respond(callback) })
   } catch (e) {
     response = opts.suppressErrors ? null : { error: e.toString() }
     return respond(callback)(500, response);
