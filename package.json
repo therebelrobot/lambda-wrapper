@@ -1,0 +1,19 @@
+{
+  "name": "lambda-api-wrapper",
+  "version": "0.0.1",
+  "description": "A lightweight api-gateway wrapper for lambda",
+  "main": "wrapper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/therebelrobot/lambda-wrapper.git"
+  },
+  "author": "Oz Haven <npm@therebelrobot.com> (@therebelrobot)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/therebelrobot/lambda-wrapper/issues"
+  },
+  "homepage": "https://github.com/therebelrobot/lambda-wrapper#readme"
+}
