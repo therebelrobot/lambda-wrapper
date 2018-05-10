@@ -2,37 +2,41 @@ const getProp = require('@f/get-prop');
 const parse = require('lambda-multipart-promise');
 const noop = () => null;
 
-const respond = (callback) => (statusCode, body, opts) => {
+const respond = (callback, log) => (statusCode, body, opts) => {
   opts = opts || {};
   if (typeof body === 'object') { body = JSON.stringify(body); }
-  return callback(null, Object.assign({}, { statusCode, body }, opts));
+  const response = Object.assign({}, { statusCode, body }, opts)
+  log('Response', response)
+  return callback(null, response);
 };
 
 module.exports = (fn, opts) => async (event, context, callback) => {
-  try {
-    // Set Verbose flag
-    const verbose = !!(getProp('queryStringParameters.verbose', event));
+  // Set Verbose flag
+  let verbose = !!(getProp('queryStringParameters.verbose', event));
+  // set up verbose console log
+  let log;
+  if (verbose) { log = console.log; } else { log = noop; }
 
-    // set up verbose console log
-    let log;
-    if (verbose) { log = console.log; } else { log = noop; }
+  // catch anything that goes wrong
+  try {
 
     // parse multipart form data, if present
     let multipartData;
     if (event.headers['Content-Type'] && event.headers['Content-Type'].includes('multipart/form-data')) {
-      log('parsing multipart body')
+      log('Parsing multipart body')
       multipartData = await parse(event.body, event.headers, { verbose });
-      log('parsing complete', multipartData)
+      log('Parsing complete', multipartData)
     }
 
     // parse json data, if present
     let jsonData;
     if (event.headers['Content-Type'] && event.headers['Content-Type'].includes('application/json')) {
-      log('parsing json body')
+      log('Parsing json body')
       jsonData = JSON.parse(event.body);
-      log('parsing complete', jsonData)
+      log('Parsing complete', jsonData)
     }
 
+    log('Executing Handler')
     return await fn({
       verbose,
       log,
@@ -41,10 +45,10 @@ module.exports = (fn, opts) => async (event, context, callback) => {
       event,
       context,
       callback,
-      respond: respond(callback),
+      respond: respond(callback, log),
     })
   } catch (e) {
     response = (opts && opts.surfaceErrors) ? { error: e.toString() } : null;
-    return respond(callback)(500, response);
+    return respond(callback, log)(500, response);
   }
 }
