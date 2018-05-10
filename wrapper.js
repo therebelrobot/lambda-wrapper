@@ -48,6 +48,7 @@ module.exports = (fn, opts) => async (event, context, callback) => {
       respond: respond(callback, log),
     })
   } catch (e) {
+    console.log(e)
     response = (opts && opts.surfaceErrors) ? { error: e.toString() } : null;
     return respond(callback, log)(500, response);
   }
