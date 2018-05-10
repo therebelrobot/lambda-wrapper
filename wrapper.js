@@ -20,13 +20,17 @@ module.exports = (fn, opts) => async (event, context, callback) => {
     // parse multipart form data, if present
     let multipartData;
     if (event.headers['Content-Type'] && event.headers['Content-Type'].includes('multipart/form-data')) {
+      log('parsing multipart body')
       multipartData = await parse(event.body, event.headers, { verbose });
+      log('parsing complete', multipartData)
     }
 
     // parse json data, if present
     let jsonData;
     if (event.headers['Content-Type'] && event.headers['Content-Type'].includes('application/json')) {
+      log('parsing json body')
       jsonData = JSON.parse(event.body);
+      log('parsing complete', jsonData)
     }
 
     return await fn({
