@@ -27,7 +27,7 @@ module.exports = (fn, opts) => async (event, context, callback) => {
       for (const headerName in event.headers) {
         if (event.headers[headerName] && typeof event.headers[headerName] === 'string') {
           const headerValue = event.headers[headerName];
-          const lowerCaseHeaderName = headerValue.toLowerCase();
+          const lowerCaseHeaderName = headerName.toLowerCase();
           lowerCaseHeaders[lowerCaseHeaderName] = headerValue
         }
       }
