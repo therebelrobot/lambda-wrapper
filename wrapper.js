@@ -22,8 +22,19 @@ module.exports = (fn, opts) => async (event, context, callback) => {
 
     // parse multipart form data, if present
     let multipartData;
-    log(event.headers)
-    if (event.headers['Content-Type'] && event.headers['Content-Type'].includes('multipart/form-data')) {
+    if (event.headers) {
+      const lowerCaseHeaders = {};
+      for (const headerName in event.headers) {
+        if (event.headers[headerName] && typeof event.headers[headerName] === 'string') {
+          const headerValue = event.headers[headerName];
+          const lowerCaseHeaderName = headerValue.toLowerCase();
+          lowerCaseHeaders[lowerCaseHeaderName] = headerValue
+        }
+      }
+      event.headers = lowerCaseHeaders;
+    }
+    log('Headers', event.headers)
+    if (event.headers['content-type'] && event.headers['content-type'].includes('multipart/form-data')) {
       log('Parsing multipart body')
       multipartData = await parse(event.body, event.headers, { verbose });
       log('Parsing complete', multipartData)
@@ -31,7 +42,7 @@ module.exports = (fn, opts) => async (event, context, callback) => {
 
     // parse json data, if present
     let jsonData;
-    if (event.headers['Content-Type'] && event.headers['Content-Type'].includes('application/json')) {
+    if (event.headers['content-type'] && event.headers['content-type'].includes('application/json')) {
       log('Parsing json body')
       jsonData = JSON.parse(event.body);
       log('Parsing complete', jsonData)
