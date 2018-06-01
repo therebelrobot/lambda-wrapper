@@ -31,7 +31,7 @@ module.exports = (fn, opts) => async (event, context, callback) => {
           lowerCaseHeaders[lowerCaseHeaderName] = headerValue
         }
       }
-      event.headers = lowerCaseHeaders;
+      event.headers = Object.assign({}, event.headers, lowerCaseHeaders);
     }
     log('Headers', event.headers)
     if (event.headers['content-type'] && event.headers['content-type'].includes('multipart/form-data')) {

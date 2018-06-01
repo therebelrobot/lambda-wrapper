@@ -1,6 +1,6 @@
 {
   "name": "lambda-api-wrapper",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A lightweight api-gateway wrapper for lambda",
   "main": "wrapper.js",
   "scripts": {
