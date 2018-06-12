@@ -1,5 +1,6 @@
 const getProp = require('@f/get-prop');
 const parse = require('lambda-multipart-promise');
+const queryString = require('query-string');
 const noop = () => null;
 
 const respond = (callback, log) => (statusCode, body, opts) => {
@@ -48,12 +49,20 @@ module.exports = (fn, opts) => async (event, context, callback) => {
       log('Parsing complete', jsonData)
     }
 
+    let formData;
+    if (event.headers['content-type'] && event.headers['content-type'].includes('application/x-www-form-urlencoded')) {
+      log('Parsing form body')
+      formData = queryString.parse(event.body);
+      log('Parsing complete', formData)
+    }
+
     log('Executing Handler')
     return await fn({
       verbose,
       log,
       multipartData,
       jsonData,
+      formData,
       event,
       context,
       callback,
