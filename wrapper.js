@@ -57,7 +57,7 @@ module.exports = (fn, opts) => async (event, context, callback) => {
     }
 
     log('Executing Handler')
-    return await fn({
+    const results = await fn({
       verbose,
       log,
       multipartData,
@@ -68,6 +68,8 @@ module.exports = (fn, opts) => async (event, context, callback) => {
       callback,
       respond: respond(callback, log),
     })
+    console.log({results})
+    return results;
   } catch (e) {
     console.log(e)
     response = (opts && opts.surfaceErrors) ? { error: e.toString() } : null;
